@@ -1,0 +1,197 @@
+definitions:
+  dto.SysAdminListInput:
+    properties:
+      info:
+        example: ""
+        type: string
+      page:
+        example: 1
+        type: integer
+      pageSize:
+        example: 10
+        type: integer
+    type: object
+  dto.SysAdminListOnceInfoOutput:
+    properties:
+      account:
+        type: string
+      createTime:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      nickname:
+        type: string
+      remark:
+        type: string
+      role:
+        type: integer
+      status:
+        type: integer
+    type: object
+  dto.SysAdminListOutput:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.SysAdminListOnceInfoOutput'
+        type: array
+      total:
+        type: integer
+    type: object
+  dto.SysAdminLoginInput:
+    properties:
+      password:
+        example: "123"
+        type: string
+      username:
+        example: admin
+        type: string
+    type: object
+  dto.SysAdminLoginOutput:
+    properties:
+      role:
+        $ref: '#/definitions/dto.SysAdminRoleOutput'
+      token:
+        type: string
+      userId:
+        type: integer
+    type: object
+  dto.SysAdminRoleOutput:
+    properties:
+      roleName:
+        example: ""
+        type: string
+      value:
+        example: ""
+        type: string
+    type: object
+  dto.SysUserLoginInput:
+    properties:
+      password:
+        example: "123"
+        type: string
+      username:
+        example: admin
+        type: string
+    type: object
+  dto.SysUserLoginOutput:
+    properties:
+      role:
+        example: ""
+        type: string
+      token:
+        example: ""
+        type: string
+    type: object
+  public.ResponseCode:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 401
+    - 1000
+    - 2001
+    - -1
+    type: integer
+    x-enum-varnames:
+    - SuccessCode
+    - UndefErrorCode
+    - ValidErrorCode
+    - InternalErrorCode
+    - InvalidRequestErrorCode
+    - CustomizeCode
+    - GroupAllSaveFlowError
+    - OtherErrorCode
+  response.Response:
+    properties:
+      code:
+        $ref: '#/definitions/public.ResponseCode'
+      data: {}
+      message:
+        type: string
+      stack:
+        type: string
+      trace_id:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/admin:
+    get:
+      consumes:
+      - application/json
+      description: 管理员配置
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SysAdminListInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.SysAdminListOutput'
+              type: object
+      summary: 管理员配置
+      tags:
+      - 管理员接口
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: 管理员登录
+      operationId: /api/v1/login
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SysUserLoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.SysUserLoginOutput'
+              type: object
+      summary: 管理员登录
+      tags:
+      - 管理员接口
+  /api/v1/logout:
+    get:
+      consumes:
+      - application/json
+      description: 管理员退出
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.SysAdminLoginOutput'
+              type: object
+      summary: 管理员退出
+      tags:
+      - 管理员接口
+swagger: "2.0"
